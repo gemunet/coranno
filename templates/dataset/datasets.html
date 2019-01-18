@@ -159,8 +159,12 @@
                         </div>
                       </td>
                       <td class="is-vertical">
-                        <div class="dataset-item__main-subtitle">Docs</div>
-                        <div class="dataset-item__main-subtitle"><span class="tag is-normal">[[ item.documents_count ]]</span></div>
+                          <div class="dataset-item__main-subtitle">Docs</div>
+                          <div class="dataset-item__main-subtitle"><span class="tag is-normal">[[ item.documents_count ]]</span></div>
+                        </td>
+                      <td class="is-vertical">
+                        <div class="dataset-item__main-subtitle">Projects</div>
+                        <div class="dataset-item__main-subtitle"><span class="tag is-normal">[[ item.projects.length ]]</span></div>
                       </td>
                       {% if user.is_superuser %}
                       <td class="is-vertical"><a @click="onEdit(item)">Edit</a></td>

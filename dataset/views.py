@@ -5,8 +5,10 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 import json
+import datetime
 from io import TextIOWrapper
 from .models import Dataset, Document
+from project.models import Annotation
 
 class DatasetView(LoginRequiredMixin, CreateView): 
     model = Dataset
@@ -83,3 +85,43 @@ class UploadView(LoginRequiredMixin, TemplateView):
         except Exception as e:
             print(e)
             return render(request, 'dataset/upload.html', {"error": str(e), "view": self})
+
+class DownloadView(LoginRequiredMixin, TemplateView):
+    template_name = 'dataset/download.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        dataset = get_object_or_404(Dataset, pk=kwargs.get('pk'))
+        context = super().get_context_data(**kwargs)
+        context['section'] = dataset.name
+        context['projects'] = dataset.projects.all()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        dataset = get_object_or_404(Dataset, pk=kwargs.get('pk'))
+        filename = 'corpus_'+dataset.name+'_'+datetime.datetime.today().strftime('%Y%m%d')
+
+        import_format = request.POST['format']
+        import_projects = request.POST.getlist('projects')
+        annset = Annotation.objects.filter(project__id__in=import_projects, document__dataset=dataset)
+        
+        import itertools
+        data = sorted(annset, key=lambda x:x.document_id)
+        docs = {key: list(group) for key, group in itertools.groupby(data, key=lambda x:x.document)}
+        
+        response = self.get_json(filename, docs)
+        return response
+        
+    def get_json(self, filename, docs):
+        response = HttpResponse(content_type='text/json')
+        response['Content-Disposition'] = 'attachment; filename="{}.json"'.format(filename)
+
+        items = []
+        for doc, anns in docs.items():
+            annotations = [{'label':ann.label.text, 'start': ann.start, 'end': ann.end} for ann in anns]
+            item = {'doc_id': doc.id, 'text': doc.text, 'annotations': annotations}
+            items.append(item)
+        
+        dump = json.dumps(items, ensure_ascii=False, indent=4)
+        response.write(dump)
+        print('dump done')
+        return response

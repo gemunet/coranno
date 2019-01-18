@@ -96,7 +96,7 @@ class Label(models.Model):
 
 class Annotation(models.Model):
     project = models.ForeignKey(Project, related_name='annotations', on_delete=models.CASCADE)
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    document = models.ForeignKey(Document, related_name='annotations', on_delete=models.CASCADE)
     start = models.IntegerField()
     end = models.IntegerField()
     label = models.ForeignKey(Label, on_delete=models.CASCADE)

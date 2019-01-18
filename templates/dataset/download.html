@@ -1,0 +1,57 @@
+{% extends "dataset/admin_base.html" %}
+{% load static %}
+{% block content-area %}
+<div class="columns">
+  <div class="column is-12">
+    <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">
+          Export text items
+        </p>
+        <a href="#" class="card-header-icon" aria-label="more options">
+          <span class="icon">
+            <i class="fas fa-angle-down" aria-hidden="true"></i>
+          </span>
+        </a>
+      </header>
+      <div class="card-content">
+        <p>
+          <b>There are one data format you can download, the JSON.</b>
+        </p>
+        <p>
+          Download all documents in the dataset that have annotations in the selected projects.
+        </p>
+          <form action="{% url 'dataset_download' view.kwargs.pk %}" method="post">
+            {% csrf_token %}
+            <div class="section">
+
+              <div class="select is-multiple">
+                <select name="projects" multiple size="5" required style="min-width: 300px;">
+                {% for p in projects %}
+                  <option selected value="{{p.id}}">{{p.name}}</option>
+                {% endfor %}
+                </select>
+              </div>
+              <br /><br />
+
+
+              <ul>
+                  <!-- <li>
+                    <a class="control">
+                      <button type="submit" class="button is-primary button-margin " name="format" value="csv">Download CSV File</button>
+                    </a>
+                  </li> -->
+                  <li>
+                    <a class="control">
+                      <button type="submit" class="button is-primary button-margin " name="format" value="json">Download JSON File</button>
+                    </a>
+                </li>
+              </ul>
+
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -12,7 +12,7 @@ class DatasetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dataset
-        fields = ('id', 'name', 'description', 'user', 'created_at', 'documents_count', 'updated_at')
+        fields = ('id', 'name', 'description', 'user', 'created_at', 'documents_count', 'updated_at', 'projects')
         # depth = 1
         # read_only_fields = ('user',)
         # extra_kwargs = {"user": {"required": False, "read_only": True}}
