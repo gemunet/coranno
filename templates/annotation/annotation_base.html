@@ -25,7 +25,7 @@
           <div class="control is-expanded">
             <input class="input" type="text" placeholder="Search document" v-model="searchQuery" @keyup.enter="submit" style="border-right:none;box-shadow: none;-webkit-box-shadow: none;">
           </div>
-
+          
           <div class="control">
             <div class="dropdown is-hoverable is-right">
               <div class="dropdown-trigger">
@@ -57,6 +57,9 @@
             </div>
           </div>
         </div>
+        <p>
+          <span class="is-size-3">{{section}}</span>
+        </p>
       </div>
 
       <div class="main pt0 pb0 pr20 pl20">

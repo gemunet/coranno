@@ -49,3 +49,9 @@ class AnnotationView(LoginRequiredMixin, TemplateView):
     def get_template_names(self):
         project = get_object_or_404(Project, pk=self.kwargs['pk'])
         return [project.get_template_name()]
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
+        context = super().get_context_data(object_list=object_list, kwargs=kwargs)
+        context['section'] = self.project.name
+        return context
