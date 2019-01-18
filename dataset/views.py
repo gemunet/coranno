@@ -117,7 +117,7 @@ class DownloadView(LoginRequiredMixin, TemplateView):
 
         items = []
         for doc, anns in docs.items():
-            annotations = [{'label':ann.label.text, 'start': ann.start, 'end': ann.end} for ann in anns]
+            annotations = [{'label':ann.label.text, 'start': ann.start, 'end': ann.end, 'project': ann.project.name} for ann in anns]
             item = {'doc_id': doc.id, 'text': doc.text, 'annotations': annotations}
             items.append(item)
         
