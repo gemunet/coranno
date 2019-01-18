@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div id="datasets_root" v-cloak>
+    <section class="hero project-color">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-10 is-offset-1">
+                    <h1 class="title is-1 has-text-white">
+                    Datasets
+                    </h1>
+                    <h2 class="subtitle is-4 has-text-white">
+                      A set of documents or sentences that will be used as a basis for the labeling projects and together they will form the corpus.
+                    </h2>
+                    {% if user.is_superuser %}
+                    <p>
+                    <a class="button is-medium is-primary" @click="isCreate=!isCreate">
+                        Create Dataset
+                    </a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal card for creating dataset. -->
+    <div class="modal" :class="{ 'is-active': isCreate }">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Create Dataset</p>
+                <button class="delete" aria-label="close" @click="isCreate=!isCreate"></button>
+            </header>
+            <form method="post">
+                {% csrf_token %}
+                <section class="modal-card-body">
+                {% for hidden_field in form.hidden_fields %}
+                {{ hidden_field }}
+                {% endfor %}
+                {% for field in form.visible_fields %}
+                <div class="field">
+                    {{ field.label_tag }}
+                    <div class="control">
+                    {% render_field field class="input select-height" %}
+                    </div>
+                    {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                </section>
+                <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
+                <button class="button is-primary">Create</button>
+                <button class="button" @click="isCreate=!isCreate">Cancel</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal card for editing dataset. -->
+    <div class="modal" :class="{ 'is-active': isEdit }">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+          <header class="modal-card-head">
+              <p class="modal-card-title">Edit Dataset</p>
+              <button class="delete" aria-label="close" @click="isEdit=!isEdit"></button>
+          </header>
+          <form method="post" @submit.prevent="updateDataset">
+              {% csrf_token %}
+              <section class="modal-card-body">
+              {% for hidden_field in form.hidden_fields %}
+              {{ hidden_field }}
+              {% endfor %}
+              {% for field in form.visible_fields %}
+              <div class="field">
+                  {{ field.label_tag }}
+                  <div class="control">
+                  {% with "dataset_form."|add:field.name as field_name %}
+                  {% render_field field class="input select-height" v-model=field_name %}
+                  {% endwith %}
+                  </div>
+                  {% if field.help_text %}
+                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                  {% endif %}
+              </div>
+              {% endfor %}
+              </section>
+              <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
+              <button type="submit" class="button is-primary">Save</button>
+              <button type="button" class="button" @click="isEdit=!isEdit">Cancel</button>
+              </footer>
+          </form>
+      </div>
+  </div>
+
+    <!-- Modal card for deleting dataset. -->
+    <div class="modal" :class="{ 'is-active': isDelete }">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Delete Dataset</p>
+            <button class="delete" aria-label="close" @click="isDelete=!isDelete"></button>
+          </header>
+          <section class="modal-card-body">
+            Are you sure you want to delete dataset?
+          </section>
+          <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
+            <button class="button is-danger" @click="deleteDataset()">Delete</button>
+            <button class="button" @click="isDelete=!isDelete">Cancel</button>
+          </footer>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="container">
+          <div class="columns">
+            <div class="column is-10 is-offset-1">
+          <div class="card events-card">
+            <header class="card-header">
+              <p class="card-header-title">
+                [[ items.length ]] Datasets
+              </p>
+              <!-- <div class="field card-header-icon">
+                <div class="control">
+                  <div class="select">
+                    <select v-model="selected">
+                      <option selected>All Project</option>
+                      <option>Text Classification</option>
+                      <option>Sequence Labeling</option>
+                      <option>Seq2seq</option>
+                    </select>
+                  </div>
+                </div>
+              </div> -->
+            </header>
+            <div class="card-table">
+              <div class="content">
+                <table class="table is-fullwidth">
+                  <tbody>
+                    <tr v-for="item in items">
+                      <td class="pl15r">
+                        <div class="thumbnail-wrapper is-vertical">
+                          <img class="project-thumbnail" src="{% static 'images/folder-open-icon.png' %}">
+                        </div>
+                        <div class="dataset-item__main is-vertical">
+                          <div class="dataset-item__main-title">
+                            <div class="dataset-item__main-title-link dataset-item__link">
+                              <a v-bind:href="'{% url 'datasets' %}' + item.id + '/docs'" class="has-text-black">[[ item.name ]]</a>
+                            </div>
+                          </div>
+                          <div class="dataset-item__main-subtitle">
+                            [[ item.description ]]
+                          </div>
+                          <div v-if="item.updated_at" class="dataset-item__main-info">
+                            <span class="dataset-item__main-update">updated <span>[[ getDaysAgo(item.updated_at) ]] days ago</span></span></div>
+                        </div>
+                      </td>
+                      <td class="is-vertical">
+                        <div class="dataset-item__main-subtitle">Docs</div>
+                        <div class="dataset-item__main-subtitle"><span class="tag is-normal">[[ item.documents_count ]]</span></div>
+                      </td>
+                      {% if user.is_superuser %}
+                      <td class="is-vertical"><a @click="onEdit(item)">Edit</a></td>
+                      <td class="is-vertical"><a class="has-text-danger" @click="onDelete(item)">Delete</a></td>
+                      {% endif %}
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script src="{% static 'js/datasets.js' %}"></script>
+{% endblock %}

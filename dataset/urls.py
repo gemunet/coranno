@@ -1,16 +1,16 @@
-from django.urls import path
+from django.urls import path, include
+from django.conf.urls import url
+from rest_framework import routers
 
 from . import views
+from . import api
+
+router = routers.DefaultRouter()
+router.register(r'datasets', api.DatasetViewSet)
+router.register(r'documents', api.DocumentViewSet)
 
 urlpatterns = [
-    # path('', views.IndexView.as_view(), name='index'),
-    # path('<int:pk>/', views.DetailView.as_view(), name='detail'),
-    # path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
-    # path('<int:question_id>/vote/', views.vote, name='vote'),
-
-    path('datasets', views.DatasetList.as_view(), name='dataset_list'),
-    path('dataset/<int:pk>', views.DatasetDetail.as_view(), name='dataset_detail'),
-    path('create', views.DatasetCreate.as_view(), name='dataset_create'),
-    path('update/<int:pk>', views.DatasetUpdate.as_view(), name='dataset_edit'),
-    path('delete/<int:pk>', views.DatasetDelete.as_view(), name='dataset_delete'),
+    path('', views.DatasetView.as_view(), name='datasets'),
+    path('<int:pk>/docs', views.DocumentsView.as_view(), name='dataset_docs'),
+    path('<int:pk>/upload', views.UploadView.as_view(), name='dataset_upload'),
 ]

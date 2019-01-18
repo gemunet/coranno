@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+{% block content %}
+<div class="columns mr0" id="mail-app" v-cloak>
+  <aside class="column is-2 aside">
+    <div>
+      <div class="main">
+        <p>
+          <span class="is-size-3">{{section}}</span>
+        </p>
+
+        <a href="{% url 'dataset_docs' view.kwargs.pk %}" class="item">
+          <span class="icon">
+            <i class="fa fa-inbox"></i>
+          </span>
+          <span class="name">Documents</span>
+        </a>
+        <a href="{% url 'dataset_upload' view.kwargs.pk %}" class="item">
+          <span class="icon">
+            <i class="fa fa-star"></i>
+          </span>
+          <span class="name">Import</span>
+        </a>
+        <a href="{% url 'dataset_docs' view.kwargs.pk %}" class="item">
+          <span class="icon">
+            <i class="fas fa-signal"></i>
+          </span>
+          <span class="name">Export</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+  <div class="column is-10 messages hero is-fullheight" id="message-feed">
+    {% block content-area %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

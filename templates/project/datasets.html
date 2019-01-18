@@ -1,0 +1,54 @@
+{% extends "project/admin_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content-area %}
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">
+      Datasets in project
+    </p>
+    <a href="#" class="card-header-icon" aria-label="more options">
+      <span class="icon">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
+    </a>
+  </header>
+
+  <div class="card-content">
+    <form method="post">
+    <div class="has-text-right">
+
+
+
+        
+            {% csrf_token %}
+            <section class="modal-card-body">
+            {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+            {% endfor %}
+            {% for field in form.visible_fields %}
+            <div class="field">
+                {{ field.label_tag }}
+                <div class="control">
+                {% render_field field class="input select-height" %}
+                </div>
+                {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+            </section>
+        
+
+
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>
+{% endblock %}

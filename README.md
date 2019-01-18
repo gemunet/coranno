@@ -1,4 +1,4 @@
-# CORANT
+# CORANNO
 Corpus Annotation Tool
 
 ## Getting Started
