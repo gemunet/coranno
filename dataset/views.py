@@ -43,6 +43,12 @@ class DocumentsView(LoginRequiredMixin, ListView):
 class UploadView(LoginRequiredMixin, TemplateView):
     template_name = 'dataset/upload.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        dataset = get_object_or_404(Dataset, pk=kwargs.get('pk'))
+        context = super(UploadView, self).get_context_data(kwargs=kwargs)
+        context['section'] = dataset.name
+        return context
+
     def post(self, request, *args, **kwargs):
         dataset = get_object_or_404(Dataset, pk=kwargs.get('pk'))
         import_format = request.POST['format']
