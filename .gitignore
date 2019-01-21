@@ -139,3 +139,5 @@ docs/_book
 test/
 
 # End of https://www.gitignore.io/api/vue,django
+
+.vscode
