@@ -103,25 +103,33 @@ class DownloadView(LoginRequiredMixin, TemplateView):
         import_format = request.POST['format']
         import_projects = request.POST.getlist('projects')
         annset = Annotation.objects.filter(project__id__in=import_projects, document__dataset=dataset)
-        
+
         import itertools
-        data = sorted(annset, key=lambda x:x.document_id)
-        docs = {key: list(group) for key, group in itertools.groupby(data, key=lambda x:x.document)}
-        
-        response = self.get_json(filename, docs)
+        data = sorted(annset, key=lambda x:x.project_id)
+        projectset = {key: list(group) for key, group in itertools.groupby(data, key=lambda x:x.project)}
+
+        docset = Document.objects.filter(id__in=set(annset.values_list('document', flat=True)))
+
+        response = self.get_json(filename, projectset, docset)
         return response
         
-    def get_json(self, filename, docs):
+    def get_json(self, filename, projectset, docset):
         response = HttpResponse(content_type='text/json')
         response['Content-Disposition'] = 'attachment; filename="{}.json"'.format(filename)
 
-        items = []
-        for doc, anns in docs.items():
-            annotations = [{'label':ann.label.text, 'start': ann.start, 'end': ann.end, 'project': ann.project.name} for ann in anns]
-            item = {'doc_id': doc.id, 'text': doc.text, 'annotations': annotations}
-            items.append(item)
+        docs = [{'doc_id': doc.id, 'dataset': doc.dataset.name, 'text': doc.text} for doc in docset]
+        projects = []
+
+        for project, anns in projectset.items():
+            projects.append({
+                    'name': project.name,
+                    'description': project.description,
+                    'split_pattern': project.split_pattern,
+                    'annotations': [{'label':ann.label.text, 'doc_id':ann.document.id, 'start': ann.start, 'end': ann.end} for ann in anns]
+                })
         
-        dump = json.dumps(items, ensure_ascii=False, indent=4)
+        # dump = json.dumps({'projects': projects, 'docs': docs}, ensure_ascii=False, indent=4)
+        dump = json.dumps({'projects': projects, 'docs': docs}, ensure_ascii=False, indent=None, separators=(',', ':'))
         response.write(dump)
         print('dump done')
         return response
