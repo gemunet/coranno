@@ -7,3 +7,4 @@ beta
 ### Prerequisites
 
 ### Installing
+python manage.py runserver
