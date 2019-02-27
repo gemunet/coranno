@@ -125,6 +125,7 @@ class DownloadView(LoginRequiredMixin, TemplateView):
                     'name': project.name,
                     'description': project.description,
                     'split_pattern': project.split_pattern,
+                    'project_type': project.project_type,
                     'annotations': [{'label':ann.label.text, 'doc_id':ann.document.id, 'start': ann.start, 'end': ann.end} for ann in anns]
                 })
         
