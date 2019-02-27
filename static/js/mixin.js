@@ -119,7 +119,7 @@ const annotationMixin = {
 
     annotations() {
       // fetch progress info.
-      axios.get(`/api/projects/${project_id}`).then((response) => {
+      axios.get(`/api/projects/${project_id}/`).then((response) => {
         this.total = response.data.progress.total;
         this.remaining = this.total-response.data.progress.current;
       });
@@ -127,7 +127,7 @@ const annotationMixin = {
   },
 
   created() {
-    axios.get(`/api/projects/${project_id}`).then((response) => {
+    axios.get(`/api/projects/${project_id}/`).then((response) => {
       this.labels = response.data.labels;
     });
     axios.get().then((response) => {
