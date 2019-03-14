@@ -105,11 +105,17 @@ class DocumentList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         project = get_object_or_404(Project, pk=self.kwargs['pk'])
-        queryset = self.queryset.filter(dataset__in=project.datasets.all())
+
+        annotations = self.request.query_params.get('annotations')
+        if annotations:
+            from django.db.models import Q
+            queryset = self.queryset.filter(Q(dataset__in=project.datasets.all()) & Q(annotations__label__in=annotations.split(','))).distinct() 
+        else:
+            queryset = self.queryset.filter(dataset__in=project.datasets.all()).distinct()
+        
         if not self.request.query_params.get('is_checked'):
             return queryset
-
-        project = get_object_or_404(Project, pk=self.kwargs['pk'])
+        
         is_null = self.request.query_params.get('is_checked') == 'true'
         queryset = project.get_documents(is_null).distinct()
 

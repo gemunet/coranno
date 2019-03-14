@@ -4,8 +4,14 @@ const baseUrl = window.location.href.split('/').slice(0, 3).join('/');
 const project_id = window.location.href.split('/').slice(4, 5).join('/');
 
 const annotationMixin = {
+  components: {
+    Multiselect: window.VueMultiselect.default
+  },
+
   data() {
     return {
+      filterAnnotationValue: [],
+      filterAnnotationOptions: [],
       pageNumber: 0,
       docs: [],
       annotations: [],
@@ -97,8 +103,13 @@ const annotationMixin = {
     },
 
     async submit() {
+      
+      annotations = this.filterAnnotationValue.reduce(function(previousValue, obj) {
+        return (previousValue ? previousValue+','+obj.id : obj.id);
+      }, '');
+
       const state = this.getState();
-      this.url = `docs/?q=${this.searchQuery}&is_checked=${state}`;
+      this.url = `docs/?q=${this.searchQuery}&is_checked=${state}&annotations=${annotations}`;
       await this.search();
       this.pageNumber = 0;
     },
@@ -132,6 +143,9 @@ const annotationMixin = {
     });
     axios.get().then((response) => {
       this.guideline = response.data.guideline;
+    });
+    axios.get(`/api/labels/`).then((response) => {
+      this.filterAnnotationOptions = response.data;
     });
     this.submit();
   },
