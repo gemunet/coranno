@@ -19,16 +19,24 @@ class ProjectSerializer(serializers.ModelSerializer):
     datasets_count = serializers.SerializerMethodField()
     progress = serializers.SerializerMethodField()
     labels = LabelSerializer(many=True, read_only=True)
+    filter_annotations = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'description', 'user', 'updated_at', 'split_pattern', 'datasets', 'project_type', 'datasets_count', 'progress', 'labels')
+        fields = ('id', 'name', 'description', 'user', 'updated_at', 'split_pattern', 'datasets', 'project_type', 'datasets_count', 'progress', 'labels', 'filter_annotation_ids', 'filter_annotations')
 
     def get_datasets_count(self, obj):
         return obj.datasets.count()
 
     def get_progress(self, obj):
         return obj.get_progress()
+
+    def get_filter_annotations(self, obj):
+        data = []
+        if obj.filter_annotation_ids:
+            data = Label.objects.filter(id__in=obj.filter_annotation_ids.split(','))
+            data = LabelSerializer(data, many=True).data
+        return data
 
 class AnnotationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -116,8 +124,9 @@ class DocumentList(generics.ListCreateAPIView):
         if not self.request.query_params.get('is_checked'):
             return queryset
         
+
         is_null = self.request.query_params.get('is_checked') == 'true'
-        queryset = project.get_documents(is_null).distinct()
+        queryset = project.get_documents(is_null, annotations).distinct()
 
         return queryset
 

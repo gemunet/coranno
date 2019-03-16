@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import TemplateView
 from django.urls import reverse, reverse_lazy
+from django import forms
 
 from dataset.models import Dataset, Document
 from .models import Project
@@ -12,9 +13,10 @@ class ProjectView(LoginRequiredMixin, CreateView):
     fields = ['name', 'description', 'project_type', 'split_pattern', 'datasets']
     template_name = 'project/projects.html'
     success_url = reverse_lazy('projects')
-
+    
     def form_valid(self, form):
         form.instance.user = self.request.user
+        form.instance.filter_annotation_ids = self.request.POST.get("filter_annotation_ids", None)
         return super(ProjectView, self).form_valid(form)
 
 class LabelView(LoginRequiredMixin, TemplateView):

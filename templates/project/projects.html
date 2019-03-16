@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 {% load widget_tweaks %}
-
+{% block header %}
+<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+{% endblock %}
 {% block content %}
 <div id="projects_root" v-cloak>
     <section class="hero project-color">
@@ -16,7 +19,7 @@
                     </h2>
                     {% if user.is_superuser %}
                     <p>
-                    <a class="button is-medium is-primary" @click="isCreate=!isCreate">
+                    <a class="button is-medium is-primary" @click="onCreate()">
                         Create Project
                     </a>
                     </p>
@@ -29,12 +32,13 @@
     <!-- Modal card for creating project. -->
     <div class="modal" :class="{ 'is-active': isCreate }">
         <div class="modal-background"></div>
+        <form method="post">
         <div class="modal-card">
+            
             <header class="modal-card-head">
                 <p class="modal-card-title">Create Project</p>
-                <button class="delete" aria-label="close" @click="isCreate=!isCreate"></button>
+                <button type="button" class="delete" aria-label="close" @click="isCreate=!isCreate"></button>
             </header>
-            <form method="post">
                 {% csrf_token %}
                 <section class="modal-card-body">
                 {% for hidden_field in form.hidden_fields %}
@@ -51,24 +55,33 @@
                     {% endif %}
                 </div>
                 {% endfor %}
+                <div class="field">
+                  <div class="control">
+                    <label>Preset filter annotations</label>
+                    <multiselect v-model="filterAnnotationValue" :options="filterAnnotationOptions" placeholder="Filter annotation" label="text" track-by="id" :multiple="true" @input="changeFilterAnnotations"></multiselect>
+                    <small class="form-text text-muted">(Optional)</small>
+                    <input type="hidden" name="filter_annotation_ids" v-model="filter_annotation_ids" />
+                  </div>
+                </div>
                 </section>
                 <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
                 <button class="button is-primary">Create</button>
                 <button class="button" @click="isCreate=!isCreate">Cancel</button>
                 </footer>
-            </form>
         </div>
+      </form>
     </div>
 
     <!-- Modal card for editing project. -->
     <div class="modal" :class="{ 'is-active': isEdit }">
       <div class="modal-background"></div>
+      <form method="post" @submit.prevent="updateProject">
       <div class="modal-card">
           <header class="modal-card-head">
               <p class="modal-card-title">Edit Project</p>
-              <button class="delete" aria-label="close" @click="isEdit=!isEdit"></button>
+              <button type="button" class="delete" aria-label="close" @click="isEdit=!isEdit"></button>
           </header>
-          <form method="post" @submit.prevent="updateProject">
+          
               {% csrf_token %}
               <section class="modal-card-body">
               {% for hidden_field in form.hidden_fields %}
@@ -87,13 +100,21 @@
                   {% endif %}
               </div>
               {% endfor %}
+              <div class="field">
+                <div class="control">
+                  <label>Preset filter annotations</label>
+                  <multiselect v-model="filterAnnotationValue" :options="filterAnnotationOptions" placeholder="Filter annotation" label="text" track-by="id" :multiple="true" @input="changeFilterAnnotations"></multiselect>
+                  <small class="form-text text-muted">(Optional)</small>
+                  <input type="hidden" name="filter_annotation_ids" v-model="filter_annotation_ids" />
+                </div>
+              </div>
               </section>
               <footer class="modal-card-foot pt20 pb20 pr20 pl20 has-background-white-ter">
               <button type="submit" class="button is-primary">Save</button>
               <button type="button" class="button" @click="isEdit=!isEdit">Cancel</button>
               </footer>
-          </form>
       </div>
+    </form>
   </div>
 
     <!-- Modal card for deleting project. -->
@@ -102,7 +123,7 @@
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">Delete Project</p>
-            <button class="delete" aria-label="close" @click="isDelete=!isDelete"></button>
+            <button type="button" class="delete" aria-label="close" @click="isDelete=!isDelete"></button>
           </header>
           <section class="modal-card-body">
             Are you sure you want to delete project?

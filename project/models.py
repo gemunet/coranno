@@ -22,6 +22,7 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     project_type = models.CharField(max_length=30, choices=PROJECT_CHOICES)
+    filter_annotation_ids = models.CharField(max_length=30, blank=True)
 
     class Meta:
         unique_together = ('name',)
@@ -60,8 +61,12 @@ class Project(models.Model):
         else:
             raise ValueError('Invalid project_type')
 
-    def get_documents(self, is_null=True):
-        docs = Document.objects.filter(dataset__in=self.datasets.all())
+    def get_documents(self, is_null=True, filter_annotations=None):
+        if filter_annotations:
+            from django.db.models import Q
+            docs = Document.objects.filter(Q(dataset__in=self.datasets.all()) & Q(annotations__label__in=filter_annotations.split(','))).distinct()
+        else:
+            docs = Document.objects.filter(dataset__in=self.datasets.all())
 
         if self.is_type_of(Project.DOCUMENT_CLASSIFICATION) or self.is_type_of(Project.SEQUENCE_LABELING):
             if is_null:

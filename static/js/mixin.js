@@ -103,7 +103,6 @@ const annotationMixin = {
     },
 
     async submit() {
-      
       annotations = this.filterAnnotationValue.reduce(function(previousValue, obj) {
         return (previousValue ? previousValue+','+obj.id : obj.id);
       }, '');
@@ -138,16 +137,20 @@ const annotationMixin = {
   },
 
   created() {
-    axios.get(`/api/projects/${project_id}/`).then((response) => {
-      this.labels = response.data.labels;
-    });
     axios.get().then((response) => {
       this.guideline = response.data.guideline;
     });
     axios.get(`/api/labels/`).then((response) => {
       this.filterAnnotationOptions = response.data;
+
+      axios.get(`/api/projects/${project_id}/`).then((response) => {
+        this.labels = response.data.labels;
+        this.filterAnnotationValue = response.data.filter_annotations;
+        
+        this.submit();
+      });
     });
-    this.submit();
+    //this.submit();
   },
 
   computed: {
