@@ -117,7 +117,7 @@ class DownloadView(LoginRequiredMixin, TemplateView):
         response = HttpResponse(content_type='text/json')
         response['Content-Disposition'] = 'attachment; filename="{}.json"'.format(filename)
 
-        docs = [{'doc_id': doc.id, 'dataset': doc.dataset.name, 'text': doc.text} for doc in docset]
+        docs = [{'doc_id': doc.id, 'file': doc.file, 'dataset': doc.dataset.name, 'text': doc.text} for doc in docset]
         projects = []
 
         for project, anns in projectset.items():
@@ -125,6 +125,7 @@ class DownloadView(LoginRequiredMixin, TemplateView):
                     'name': project.name,
                     'description': project.description,
                     'split_pattern': project.split_pattern,
+                    'split_type': project.split_type,
                     'project_type': project.project_type,
                     'annotations': [{'label':ann.label.text, 'doc_id':ann.document.id, 'start': ann.start, 'end': ann.end} for ann in anns]
                 })

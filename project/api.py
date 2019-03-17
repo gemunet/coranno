@@ -23,7 +23,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'description', 'user', 'updated_at', 'split_pattern', 'datasets', 'project_type', 'datasets_count', 'progress', 'labels', 'filter_annotation_ids', 'filter_annotations')
+        fields = ('id', 'name', 'description', 'user', 'updated_at', 'split_pattern', 'split_type', 'datasets', 'project_type', 'datasets_count', 'progress', 'labels', 'filter_annotation_ids', 'filter_annotations')
 
     def get_datasets_count(self, obj):
         return obj.datasets.count()
@@ -73,7 +73,10 @@ class DocumentAnnotationSerializer(serializers.ModelSerializer):
 
     def get_sentences(self, obj):
         project = get_object_or_404(Project, pk=self.context.get('view').kwargs['pk'])
-        sentences = self.split_text(obj.text, project.split_pattern)
+        if project.split_type == Project.SPLIT_CHOICES_SPLIT:
+            sentences = self.split_text(obj.text, project.split_pattern)
+        else:
+            sentences = self.match_split_text(obj.text, project.split_pattern)
         return [s for s in sentences if s['text']]
 
     class Meta:
@@ -93,6 +96,17 @@ class DocumentAnnotationSerializer(serializers.ModelSerializer):
                 start = m.end()
         t = text[start:]
         spans.append({'text': t, 'start': start, 'end': start+len(t)})
+        
+        return spans
+
+    def match_split_text(self, text, pattern):
+        spans = []
+
+        if pattern:
+            it = re.finditer(pattern, text)
+            for m in it:
+                t = text[m.start(): m.end()]
+                spans.append({'text': t, 'start': m.start(), 'end': m.end()})
         
         return spans
 

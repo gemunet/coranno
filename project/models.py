@@ -14,9 +14,18 @@ class Project(models.Model):
         # (Seq2seq, 'sequence to sequence'),
     )
 
+    SPLIT_CHOICES_SPLIT = 'split'
+    SPLIT_CHOICES_MATCH = 'match'
+
+    SPLIT_CHOICES = (
+        (SPLIT_CHOICES_SPLIT, 'split'),
+        (SPLIT_CHOICES_MATCH, 'match'),
+    )
+
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     split_pattern = models.CharField(max_length=100, blank=True, help_text='(optional) regex pattern to parse document in sentences.')
+    split_type = models.CharField(max_length=30, choices=SPLIT_CHOICES, default=SPLIT_CHOICES_SPLIT)
     datasets = models.ManyToManyField(Dataset, related_name='projects')
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -10,7 +10,7 @@ from .models import Project
 
 class ProjectView(LoginRequiredMixin, CreateView): 
     model = Project
-    fields = ['name', 'description', 'project_type', 'split_pattern', 'datasets']
+    fields = ['name', 'description', 'project_type', 'split_pattern', 'split_type', 'datasets']
     template_name = 'project/projects.html'
     success_url = reverse_lazy('projects')
     
