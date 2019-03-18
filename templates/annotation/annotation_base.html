@@ -71,7 +71,7 @@
       </div>
 
       <div class="main pt0 pb0 pr20 pl20">
-        <span>About [[ count ]] results</span>
+        <a href="#" title="toggle it" v-on:click="toggleOrder"><i class="fas" v-bind:class="{ 'fa-sort-amount-down' : order=='down', 'fa-sort-amount-up' : order=='up' }"></i></a> | <span>About [[ count ]] results</span>
       </div>
 
       <div class="main">

@@ -127,6 +127,7 @@ class DocumentList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         project = get_object_or_404(Project, pk=self.kwargs['pk'])
+        order = self.request.query_params.get('order')
 
         annotations = self.request.query_params.get('annotations')
         if annotations:
@@ -136,13 +137,13 @@ class DocumentList(generics.ListCreateAPIView):
             queryset = self.queryset.filter(dataset__in=project.datasets.all()).distinct()
         
         if not self.request.query_params.get('is_checked'):
-            return queryset
-        
+            queryset
+        else:
+            is_null = self.request.query_params.get('is_checked') == 'true'
+            queryset = project.get_documents(is_null, annotations).distinct()
 
-        is_null = self.request.query_params.get('is_checked') == 'true'
-        queryset = project.get_documents(is_null, annotations).distinct()
 
-        return queryset
+        return queryset.order_by('id') if order=='down' else queryset.order_by('-id')
 
 class AnnotationList(generics.ListCreateAPIView):
     pagination_class = None

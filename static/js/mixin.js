@@ -24,6 +24,7 @@ const annotationMixin = {
       picked: 'all',
       count: 0,
       isActive: false,
+      order: 'down',
     };
   },
 
@@ -108,7 +109,7 @@ const annotationMixin = {
       }, '');
 
       const state = this.getState();
-      this.url = `docs/?q=${this.searchQuery}&is_checked=${state}&annotations=${annotations}`;
+      this.url = `docs/?q=${this.searchQuery}&is_checked=${state}&annotations=${annotations}&order=${this.order}`;
       await this.search();
       this.pageNumber = 0;
     },
@@ -120,6 +121,11 @@ const annotationMixin = {
         this.annotations[this.pageNumber].splice(index, 1);
       });
     },
+
+    toggleOrder() {
+      this.order = (this.order == 'up' ? 'down' : 'up');
+      this.submit();
+    }
   },
 
   watch: {
