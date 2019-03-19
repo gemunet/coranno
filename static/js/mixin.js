@@ -31,7 +31,7 @@ const annotationMixin = {
   methods: {
     async nextPage() {
       this.pageNumber += 1;
-      if (this.pageNumber === this.docs.length) {
+      if (this.pageNumber >= this.docs.length) {
         if (this.next) {
           this.url = this.next;
           await this.search();
@@ -44,7 +44,7 @@ const annotationMixin = {
 
     async prevPage() {
       this.pageNumber -= 1;
-      if (this.pageNumber === -1) {
+      if (this.pageNumber <= -1) {
         if (this.prev) {
           this.url = this.prev;
           await this.search();

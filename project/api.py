@@ -105,8 +105,13 @@ class DocumentAnnotationSerializer(serializers.ModelSerializer):
         if pattern:
             it = re.finditer(pattern, text)
             for m in it:
-                t = text[m.start(): m.end()]
-                spans.append({'text': t, 'start': m.start(), 'end': m.end()})
+                if m.groups():
+                    for i, t in enumerate(m.groups(), start=1):
+                        spans.append({'text': t, 'start': m.start(i), 'end': m.end(i)})
+                else:
+                    spans.append({'text': m.group(0), 'start': m.start(), 'end': m.end()})
+        else:
+            spans.append({'text': text, 'start': 0, 'end': len(text)})
         
         return spans
 
@@ -114,8 +119,8 @@ class DocumentList(generics.ListCreateAPIView):
     queryset = Document.objects.all()
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     search_fields = ('text', )
-    page_size = 5
-    default_limit = 5
+    # page_size = 5
+    # default_limit = 5
     pagination_class = LimitOffsetPagination
     permission_classes = (IsAuthenticated,)
 
