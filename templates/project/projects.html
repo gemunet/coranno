@@ -172,7 +172,8 @@
                     <tr v-for="item in selectedProjects()">
                       <td class="pl15r">
                         <div class="thumbnail-wrapper is-vertical">
-                          <img class="project-thumbnail" src="{% static 'images/actions-tag-icon.png' %}">
+                          <img v-if="item.project_type=='DocumentClassification'" class="project-thumbnail" src="{% static 'images/actions-tag-icon.png' %}">
+                          <img v-if="item.project_type=='SequenceLabeling'" class="project-thumbnail" width="55" src="{% static 'images/highlighter.png' %}">
                         </div>
                         <div class="dataset-item__main is-vertical">
                           <div class="dataset-item__main-title">
