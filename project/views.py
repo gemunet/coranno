@@ -57,3 +57,6 @@ class AnnotationView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(object_list=object_list, kwargs=kwargs)
         context['section'] = self.project.name
         return context
+
+class GuidelineView(LoginRequiredMixin, TemplateView):
+    template_name = 'project/guideline.html'

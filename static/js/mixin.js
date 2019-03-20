@@ -143,13 +143,11 @@ const annotationMixin = {
   },
 
   created() {
-    axios.get().then((response) => {
-      this.guideline = response.data.guideline;
-    });
     axios.get(`/api/labels/`).then((response) => {
       this.filterAnnotationOptions = response.data;
 
       axios.get(`/api/projects/${project_id}/`).then((response) => {
+        this.guideline = response.data.guideline;
         this.labels = response.data.labels;
         this.filterAnnotationValue = response.data.filter_annotations;
         

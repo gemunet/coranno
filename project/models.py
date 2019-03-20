@@ -32,6 +32,7 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     project_type = models.CharField(max_length=30, choices=PROJECT_CHOICES)
     filter_annotation_ids = models.CharField(max_length=30, blank=True)
+    guideline = models.TextField(blank=True)
 
     class Meta:
         unique_together = ('name',)

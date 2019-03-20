@@ -23,7 +23,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'description', 'user', 'updated_at', 'split_pattern', 'split_type', 'datasets', 'project_type', 'datasets_count', 'progress', 'labels', 'filter_annotation_ids', 'filter_annotations')
+        fields = ('id', 'name', 'description', 'user', 'updated_at', 'split_pattern', 'split_type', 'datasets', 'project_type', 'datasets_count', 'progress', 'labels', 'filter_annotation_ids', 'filter_annotations', 'guideline')
 
     def get_datasets_count(self, obj):
         return obj.datasets.count()
