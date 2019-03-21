@@ -6,7 +6,7 @@ Vue.use(VueShortkey, {
 });
 
 Vue.component('annotator', {
-  template: '<div @click="setSelectedRange">\
+  template: '<div>\
                     <span class="text-sequence"\
                          v-for="r in chunks"\
                          v-if="id2label[r.label]"\
@@ -162,6 +162,10 @@ Vue.component('annotator', {
       return id2label;
     },
   },
+  
+  mounted: function() {
+    this.$el.parentNode.parentNode.addEventListener("click", this.setSelectedRange);
+  }
 });
 
 const vm = new Vue({
@@ -186,4 +190,8 @@ const vm = new Vue({
       });
     },
   },
+
+  created: function() {
+    //el.addEventListener('click', this.$refs.annotator.setSelectedRange)
+  }
 });
