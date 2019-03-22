@@ -7,3 +7,6 @@
 .w-15 {
     width: 15em;
 }
+.card-block+.card-block {
+    border-top: 1px dashed blue;
+}

@@ -18,9 +18,9 @@
     </div>
   </header>
 
-  <div class="card-content">
+  <div class="card-content card-block" v-for="r in chunks">
     <div class="field is-grouped is-grouped-multiline">
-      <div class="control" v-for="(annotation, index) in annotations[pageNumber]">
+      <div class="control" v-for="(annotation, index) in r.annotations">
         <div class="tags has-addons" v-if="id2label[annotation.label]">
           <span class="tag is-medium" v-bind:style="{ color: id2label[annotation.label].text_color, 'background-color': id2label[annotation.label].background_color }">
             [[ id2label[annotation.label].text ]]
@@ -30,8 +30,8 @@
       </div>
     </div>
     <hr style="margin: 0.8rem 0;">
-    <div class="content" v-if="docs[pageNumber]">
-      <span class="text">[[ docs[pageNumber].text ]]</span>
+    <div class="content contentText" :data-offset="r.start" v-if="docs[pageNumber]">
+      <span class="text contentText" :data-offset="r.start">[[ docs[pageNumber].text.slice(r.start, r.end) ]]</span>
     </div>
   </div>
 </div>
