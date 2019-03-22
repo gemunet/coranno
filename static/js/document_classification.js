@@ -101,7 +101,7 @@ const vm = new Vue({
       if(isNaN(offset) || e.target.firstChild.nodeName != '#text' || !e.target.classList.contains('contentText')) {
         this.startOffset = 0;
         this.endOffset = 0;
-        window.getSelection().collapse(null);
+        window.getSelection().collapseToEnd();
         return;
       }
 
