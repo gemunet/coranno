@@ -12,7 +12,7 @@ Vue.component('annotator', {
                          v-if="id2label[r.label]"\
                          v-bind:class="{tag: id2label[r.label].text_color}"\
                          v-bind:style="{ color: id2label[r.label].text_color, backgroundColor: id2label[r.label].background_color }"\
-                    >{{ text.slice(r.start, r.end) }}<button class="delete is-small"\
+                    >{{ text.slice(r.start-offset, r.end-offset) }}<button class="delete is-small"\
                                          v-if="id2label[r.label].text_color"\
                                          @click="removeLabel(r)"></button></span>\
                </div>',
@@ -121,21 +121,12 @@ Vue.component('annotator', {
   computed: {
     sortedEntityPositions() {
       this.entityPositions = this.entityPositions.sort((a, b) => a.start - b.start);
-
-      for(i=0; i<this.entityPositions.length; i++) {
-        element = this.entityPositions[i];
-        if(element.start >= this.text.length) {
-          element.start = element.start-this.offset;
-          element.end = element.end-this.offset;
-        }
-      }
-
       return this.entityPositions;
     },
 
     chunks() {
       const res = [];
-      let left = 0;
+      let left = this.offset;
       for (let i = 0; i < this.sortedEntityPositions.length; i++) {
         const e = this.sortedEntityPositions[i];
         const l = this.makeLabel(left, e.start);
@@ -143,7 +134,7 @@ Vue.component('annotator', {
         res.push(e);
         left = e.end;
       }
-      const l = this.makeLabel(left, this.text.length);
+      const l = this.makeLabel(left, this.offset+this.text.length);
       res.push(l);
       return res;
     },
