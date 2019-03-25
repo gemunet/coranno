@@ -136,9 +136,9 @@ const vm = new Vue({
       if (this.startOffset === this.endOffset) {
         return false;
       }
-      if (this.startOffset > this.docs[this.pageNumber].text.length || this.endOffset > this.docs[this.pageNumber].text.length) {
-        return false;
-      }
+      // if (this.startOffset > this.docs[this.pageNumber].text.length || this.endOffset > this.docs[this.pageNumber].text.length) {
+      //   return false;
+      // }
       if (this.startOffset < 0 || this.endOffset < 0) {
         return false;
       }

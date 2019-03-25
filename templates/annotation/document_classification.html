@@ -31,7 +31,7 @@
     </div>
     <hr style="margin: 0.8rem 0;">
     <div class="content contentText" :data-offset="r.start" v-if="docs[pageNumber]">
-      <span class="text contentText" :data-offset="r.start">[[ docs[pageNumber].text.slice(r.start, r.end) ]]</span>
+      <span class="text contentText" :data-offset="r.start">[[ docs[pageNumber].doc_text.slice(r.start, r.end) ]]</span>
     </div>
   </div>
 </div>

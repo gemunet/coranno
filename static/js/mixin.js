@@ -74,6 +74,7 @@ const annotationMixin = {
             this.docs.push({
               'id': doc.id,
               'file': doc.file,
+              'doc_text': doc.text,
               'text': sentence.text,
               'start': sentence.start,
               'end': sentence.end,
