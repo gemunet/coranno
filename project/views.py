@@ -60,3 +60,19 @@ class AnnotationView(LoginRequiredMixin, TemplateView):
 
 class GuidelineView(LoginRequiredMixin, TemplateView):
     template_name = 'project/guideline.html'
+
+class StatsView(LoginRequiredMixin, TemplateView):
+    template_name = 'project/stats.html'
+
+    def get_context_data(self, *args, **kwargs):
+        self.project = get_object_or_404(Project, pk=self.kwargs['pk'])
+        context = super().get_context_data(*args, **kwargs)
+        context['project'] = self.project
+        context['annotations'] = self.project.annotations.all().order_by('label_id')
+
+        print(self.project.annotations.all())
+
+        from collections import defaultdict
+        #print(defaultdict(self.project.annotations.all()))
+        #print(len(self.project.annotations.all()))
+        return context

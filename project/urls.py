@@ -15,6 +15,7 @@ urlpatterns = [
     path('<int:pk>/labels', views.LabelView.as_view(), name='project_labels'),
     path('<int:pk>/datasets', views.ProjectDatasetView.as_view(), name='project_datasets'),
     path('<int:pk>/guideline', views.GuidelineView.as_view(), name='guideline'),
+    path('<int:pk>/stats', views.StatsView.as_view(), name='stats'),
 
     path('<int:pk>/annotation', views.AnnotationView.as_view(), name='project_annotation'),
     path('<int:pk>/docs/', api.DocumentList.as_view(), name='docs'),

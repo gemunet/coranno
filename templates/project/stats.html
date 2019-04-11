@@ -1,0 +1,41 @@
+{% extends "project/admin_base.html" %}
+{% load static %}
+{% block content-area %}
+
+{% regroup annotations by label as annotations_list %}
+
+<div class="columns">
+    <div class="column is-12">
+        <div class="card">
+        <header class="card-header">
+            <p class="card-header-title">
+            Label stats
+            </p>
+            <a href="#" class="card-header-icon" aria-label="more options">
+            <span class="icon">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+            </a>
+        </header>
+        <div class="card-content columns">
+            <table class="table">
+                <thead>
+                    <th>Label</th>
+                    <th>Count</th>
+                </thead>
+                <tbody>
+                    {% for ann in annotations_list %}
+                    <tr><td>{{ ann.grouper }}</td><td>{{ ann.list|length }}</td></tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <th>Total</th>
+                    <th>{{ annotations|length }}</th>
+                </tfoot>
+            </table>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
