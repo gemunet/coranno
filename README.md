@@ -1,11 +1,11 @@
 # CORANNO
 Corpus Annotation Tool
 
-This is a tool for Natural Language Processing (NLP), which allows to create fully annotated corpora with classification and POS/Entities, portable and reusable.
+This is a tool for Natural Language Processing (NLP), which allows to create fully annotated corpora with Classification/Sentiment and POS/Entities/NER/, portable and reusable.
 
 features:
 - Multiple datasets
-- Entities Annotations
+- Entities Annotations (NER)
 - Classification multilabel and multiclass
 - Possibility to tag a selected text area
 - Custom tags creation
@@ -14,12 +14,15 @@ features:
 - Split sentences in project by regular expression
 - Views progress and stats
 - Corpus export in simple JSON format
+- Collaborative annotation
+- Ready for docker
 
 Based on doccano https://github.com/chakki-works/doccano
 
 ## Prerequisites
 
 - python3
+- Google Chrome(highly recommended)
 
 
 ## Installing
