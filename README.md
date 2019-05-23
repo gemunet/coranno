@@ -1,7 +1,7 @@
 # CORANNO
 Corpus Annotation Tool
 
-This is a tool for Natural Language Processing (NLP), which allows to create fully annotated corpora with POS and Entities, portable and reusable.
+This is a tool for Natural Language Processing (NLP), which allows to create fully annotated corpora with classification and POS/Entities, portable and reusable.
 
 features:
 - Multiple datasets
