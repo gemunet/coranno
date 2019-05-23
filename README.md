@@ -81,7 +81,9 @@ Entities:
 
 export full annotated corpus in simple JSON format, go to "Dataset" in top bar and open the dataset.
 
-In dataset left menu, click in "Export", select annotation projects to export and click in "Download JSON file"
+In dataset left menu, click in "Export", select annotation projects to export and click in "Download JSON file".
+
+All documents with annotations will be exported.
 
 example format
 
