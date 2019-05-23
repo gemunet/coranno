@@ -7,7 +7,7 @@ features:
 - Multiple datasets
 - Entities Annotations
 - Classification multilabel and multiclass
-- possibility to tag a selected area
+- Possibility to tag a selected text area
 - Custom tags creation
 - Search en dataset
 - Filter dataset for project by tag
