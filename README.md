@@ -5,6 +5,7 @@ This is a tool for Natural Language Processing (NLP), which allows to create ful
 
 features:
 - Multiple datasets
+- Multiple Annotations projects
 - Entities Annotations (NER)
 - Classification multilabel and multiclass
 - Possibility to tag a selected text area
