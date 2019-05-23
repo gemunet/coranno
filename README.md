@@ -34,14 +34,14 @@ pip install -r requirements.txt
 ## Getting Started
 
 1. Run server
-python3 run.py 8000
+    > python3 run.py 8000
 
-2. go to page
-http://localhost:8000/
+2. Go to page
+    > http://localhost:8000/
 
-3. enter login credentials:
-user: admin
-pass: admin
+3. Enter login credentials:
+    + user: admin
+    + pass: admin
 
 ### Create Dataset
 
